@@ -35,12 +35,12 @@ compilationUnit:
 
 translationUnit:
 	(	lineDirectives
-	//|	cStuff
+	|	cStuff
 	)+
 	;
 
 cStuff:
-	((~(Hash))* Newline)
+	Ccode* Newline
 	;
 
 lineDirectives:
@@ -52,37 +52,26 @@ lineDirectives:
 	;
 
 defineDirective:
-	Hash Whitespace? Define Whitespace
+	Hash Define
 	;
 
 includeDirective:
-	Hash Whitespace? Include //Whitespace includeFileName
+	Hash Include includeFileName
 	;
 
 includeFileName:
-	relativeFileName
-	| absoluteFileName
-	;
-
-relativeFileName:
-	DoubleQuote fileName DoubleQuote
-	;
-
-absoluteFileName:
-	Less fileName Greater
-	;
-
-fileName:
-	Character+
+	RelativeFileName
+	| AbsoluteFileName
 	;
 
 pragmaDirective:
-	Hash Whitespace? Pragma Whitespace
+	Hash Pragma
 	;
 
 // lexer tokens
 Whitespace
-	:	[ \t]+
+	:	([ \t]
+		| Backslash Newline)+
 		-> skip
 	;
 
@@ -90,19 +79,21 @@ Newline
 	:	(	CarriageReturn LineFeed?
 	|	LineFeed
 		)
-		-> skip
 	;
 
-fragment Character:
-	[a-zA-Z_.]
-	;
-
-Less: '<';
-Greater: '>';
 Hash: '#';
 Include: 'include';
 Define: 'define';
 Pragma: 'pragma';
-DoubleQuote: '"';
-CarriageReturn: '\r';
+
 LineFeed: '\n';
+CarriageReturn: '\r';
+Backslash: '\\';
+SingleQuote: '\'';
+DoubleQuote: '"';
+Less: '<';
+Greater: '>';
+
+RelativeFileName: DoubleQuote (~["])+ DoubleQuote;
+AbsoluteFileName: Less (~[>])+ Greater;
+Ccode: ~[#];
