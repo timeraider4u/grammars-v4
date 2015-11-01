@@ -35,14 +35,15 @@ compilationUnit:
 
 translationUnit:
 	(	lineDirectives
-	//|	code
+	|	code
 	)+
 	;
 
-/*code:
+/**/
+code:
 	Ccode
 	;
-*/
+/**/
 
 lineDirectives:
 	(	defineDirective
@@ -116,7 +117,7 @@ Greater: '>';
 RelativeFileName: DoubleQuote (~["])+ DoubleQuote;
 AbsoluteFileName: Less (~[>])+ Greater;
 
-//Ccode: ~[#] (~[\n\r])* Newline;
+Ccode: ~[#] (~[\n\r])+ Newline;
 /*Ccode:
 	(~[#])+
 	;
