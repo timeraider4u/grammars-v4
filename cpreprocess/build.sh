@@ -10,7 +10,7 @@ echo ""
 echo ""
 echo ""
 echo ""
-cat ./examples/empty.h | java -cp ${CP} org.antlr.v4.runtime.misc.TestRig CPreprocess compilationUnit -gui
+cat ./examples/includes.h | java -cp ${CP} org.antlr.v4.runtime.misc.TestRig CPreprocess compilationUnit -gui
 
 find . -name "*.java" -not -name "Scope.java" -not -name "Main.java" -exec rm {} \;
 rm *.class || die

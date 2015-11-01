@@ -35,13 +35,14 @@ compilationUnit:
 
 translationUnit:
 	(	lineDirectives
-	|	cStuff
+	//|	code
 	)+
 	;
 
-cStuff:
-	Ccode* Newline
+/*code:
+	Ccode
 	;
+*/
 
 lineDirectives:
 	(	defineDirective
@@ -52,11 +53,13 @@ lineDirectives:
 	;
 
 defineDirective:
-	Hash Define
+	Hash
+	Define
 	;
 
 includeDirective:
-	Hash Include includeFileName
+	Hash
+	Include includeFileName
 	;
 
 includeFileName:
@@ -65,7 +68,8 @@ includeFileName:
 	;
 
 pragmaDirective:
-	Hash Pragma
+	Hash
+	Pragma
 	;
 
 // lexer tokens
@@ -81,10 +85,25 @@ Newline
 		)
 	;
 
-Hash: '#';
-Include: 'include';
-Define: 'define';
-Pragma: 'pragma';
+//fragment
+Hash:
+	'#'
+	;
+
+Include:
+	//Hash
+	'include'
+	;
+
+Define:
+	//Hash
+	'define'
+	;
+
+Pragma:
+	//Hash
+	'pragma'
+	;
 
 LineFeed: '\n';
 CarriageReturn: '\r';
@@ -96,4 +115,9 @@ Greater: '>';
 
 RelativeFileName: DoubleQuote (~["])+ DoubleQuote;
 AbsoluteFileName: Less (~[>])+ Greater;
-Ccode: ~[#];
+
+//Ccode: ~[#] (~[\n\r])* Newline;
+/*Ccode:
+	(~[#])+
+	;
+*/
