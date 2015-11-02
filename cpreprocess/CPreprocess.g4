@@ -49,14 +49,23 @@ code:
 
 lineDirectives:
 	(	includeDirective 
-	//|	defineDirective
+	|	defineDirective
 	//|	pragmaDirective
 	)
 	Newline
 	;
 
 defineDirective:
-	Define
+	Define Identifier replaceCode
+	;
+
+replaceCode:
+	//~Hash+
+	(	Rcode
+	|	RelativeFileName
+	|	AbsoluteFileName
+	|	Identifier
+	)+
 	;
 
 includeDirective:
@@ -68,14 +77,14 @@ pragmaDirective:
 	;
 
 // lexer tokens
-Whitespace
-	:	([ \t]
+Whitespace:
+		([ \t]
 		| Backslash Newline)+
 		-> skip
 	;
 
-Newline
-	:	CarriageReturn LineFeed?
+Newline:
+		CarriageReturn LineFeed?
 	|	LineFeed
 	;
 
@@ -95,19 +104,86 @@ Pragma:
 	'pragma'
 	;
 
-LineFeed: '\n';
-CarriageReturn: '\r';
-Backslash: '\\';
-SingleQuote: '\'';
-DoubleQuote: '"';
-Less: '<';
-Greater: '>';
+LineFeed:
+	'\n'
+	;
 
-RelativeFileName: DoubleQuote ( . )*? DoubleQuote;
-AbsoluteFileName: Less ( . )*? Greater;
-//Others: [_];
-//Letter: [a-zA-Z];
-//Digit: [0-9];
+CarriageReturn: 
+	'\r'
+	;
+
+Backslash: 
+	'\\'
+	;
+
+SingleQuote: 
+	'\''
+;
+
+DoubleQuote:
+	'"'
+	;
+
+Less: 
+	'<'
+	;
+
+Greater: 
+	'>'
+	;
+
+RelativeFileName:
+	DoubleQuote ( . )*? DoubleQuote
+	;
+
+AbsoluteFileName:
+	Less ( . )*? Greater
+	;
+
+Identifier:	
+	IdentifierNondigit
+		(	IdentifierNondigit
+		|	Digit
+		)*
+	;
+
+fragment
+IdentifierNondigit:
+		NondigitLetter
+	|	UniversalCharacterName
+	;
+
+fragment
+Digit:
+	[0-9]
+	;
+
+fragment
+NondigitLetter:
+	[a-zA-Z]
+	;
+
+fragment
+UniversalCharacterName:
+		'\\u' HexQuad
+	|	'\\U' HexQuad HexQuad
+	;
+
+fragment
+HexQuad:
+	HexadecimalDigit HexadecimalDigit HexadecimalDigit HexadecimalDigit
+    ;
+
+fragment 
+HexadecimalDigit:
+	[0-9a-fA-F]
+	;
+
+Rcode:
+	~[#\n\r]
+	;
 
 // this token is needed, as otherwise "code" will not work properly!
-Any: .;
+Any:
+	.
+	;
