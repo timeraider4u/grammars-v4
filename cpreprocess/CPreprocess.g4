@@ -44,12 +44,14 @@ lines:
 	;
 
 code:
-	~Hash+ Newline
+	~Hash (~Newline)* Newline
 	;
 
 lineDirectives:
 	(	includeDirective 
 	|	defineDirective
+	|	unDefineDirective
+	|	errorDirective
 	//|	pragmaDirective
 	)
 	Newline
@@ -62,14 +64,22 @@ defineDirective:
 replaceCode:
 	//~Hash+
 	(	Rcode
-	|	RelativeFileName
+	|	String
 	|	AbsoluteFileName
 	|	Identifier
 	)+
 	;
 
 includeDirective:
-	Include (RelativeFileName | AbsoluteFileName)
+	Include (String | AbsoluteFileName | Identifier)
+	;
+
+unDefineDirective:
+	Undefine Identifier
+	;
+
+errorDirective:
+	Error String
 	;
 
 pragmaDirective:
@@ -94,6 +104,14 @@ Hash:
 
 Include:
 	'include'
+	;
+
+Error:
+	'error'
+	;
+
+Undefine:
+	'undef'
 	;
 
 Define:
@@ -132,7 +150,7 @@ Greater:
 	'>'
 	;
 
-RelativeFileName:
+String:
 	DoubleQuote ( . )*? DoubleQuote
 	;
 
