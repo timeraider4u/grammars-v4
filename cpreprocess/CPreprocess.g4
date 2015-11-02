@@ -34,44 +34,41 @@ compilationUnit:
 	;
 
 translationUnit:
-	(	lineDirectives
+	(	Hash lineDirectives
 	|	code
+	|	Newline
 	)+
 	;
 
 /**/
 code:
-	Ccode
+	//Ccode
+	//~Hash (~Newline)+ Newline
+	~Hash+ Newline
 	;
 /**/
 
 lineDirectives:
-	(	defineDirective
-	|	includeDirective
-	|	pragmaDirective
+	(	includeDirective 
+	//|	defineDirective
+	//|	pragmaDirective
 	)
 	Newline
 	;
 
-defineDirective:
-	Hash
-	Define
+/*defineDirective:
+	'define'
 	;
+*/
 
 includeDirective:
-	Hash
-	Include includeFileName
+	Include (RelativeFileName | AbsoluteFileName)
 	;
 
-includeFileName:
-	RelativeFileName
-	| AbsoluteFileName
+/*pragmaDirective:
+	'pragma'
 	;
-
-pragmaDirective:
-	Hash
-	Pragma
-	;
+*/
 
 // lexer tokens
 Whitespace
@@ -80,45 +77,44 @@ Whitespace
 		-> skip
 	;
 
-Newline
+/*Newline
 	:	(	CarriageReturn LineFeed?
 	|	LineFeed
 		)
-	;
+		LineFeed
+	;*/
 
-//fragment
 Hash:
 	'#'
 	;
 
 Include:
-	//Hash
 	'include'
 	;
 
-Define:
-	//Hash
+/*Define:
 	'define'
 	;
 
 Pragma:
-	//Hash
 	'pragma'
 	;
+*/
 
-LineFeed: '\n';
-CarriageReturn: '\r';
+//LineFeed: '\n';
+//CarriageReturn: '\r';
+Newline: '\n';
 Backslash: '\\';
 SingleQuote: '\'';
 DoubleQuote: '"';
 Less: '<';
 Greater: '>';
 
-RelativeFileName: DoubleQuote (~["])+ DoubleQuote;
-AbsoluteFileName: Less (~[>])+ Greater;
+RelativeFileName: DoubleQuote ( . )*? DoubleQuote;
+AbsoluteFileName: Less ( . )*? Greater;
+//Others: [_];
+//Letter: [a-zA-Z];
+//Digit: [0-9];
 
-Ccode: ~[#] (~[\n\r])+ Newline;
-/*Ccode:
-	(~[#])+
-	;
-*/
+// this token is needed, as otherwise "code" will not work!
+Any: .;

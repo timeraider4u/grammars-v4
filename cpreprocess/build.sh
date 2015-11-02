@@ -3,14 +3,16 @@ function die() {
 	exit 1
 }
 
+#GRAMMAR="Cmacros"
+GRAMMAR="CPreprocess"
 CP="./libs/antlr-4.5.1-complete.jar:."
-java -cp ${CP} org.antlr.v4.Tool CPreprocess.g4 || die
+java -cp ${CP} org.antlr.v4.Tool ${GRAMMAR}.g4 || die
 javac -cp ${CP} *.java || die
 echo ""
 echo ""
 echo ""
 echo ""
-cat ./examples/includes.h | java -cp ${CP} org.antlr.v4.runtime.misc.TestRig CPreprocess compilationUnit -gui
+cat ./examples/includes.h | java -cp ${CP} org.antlr.v4.runtime.misc.TestRig ${GRAMMAR} compilationUnit -gui
 
 find . -name "*.java" -not -name "Scope.java" -not -name "Main.java" -exec rm {} \;
 rm *.class || die
