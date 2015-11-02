@@ -34,19 +34,18 @@ compilationUnit:
 	;
 
 translationUnit:
-	(	Hash lineDirectives
-	|	code
-	|	Newline
-	)+
+	lines+
 	;
 
-/**/
+lines:
+		Hash lineDirectives
+	|	code
+	|	Newline
+	;
+
 code:
-	//Ccode
-	//~Hash (~Newline)+ Newline
 	~Hash+ Newline
 	;
-/**/
 
 lineDirectives:
 	(	includeDirective 
@@ -56,19 +55,17 @@ lineDirectives:
 	Newline
 	;
 
-/*defineDirective:
-	'define'
+defineDirective:
+	Define
 	;
-*/
 
 includeDirective:
 	Include (RelativeFileName | AbsoluteFileName)
 	;
 
-/*pragmaDirective:
-	'pragma'
+pragmaDirective:
+	Pragma
 	;
-*/
 
 // lexer tokens
 Whitespace
@@ -77,12 +74,10 @@ Whitespace
 		-> skip
 	;
 
-/*Newline
-	:	(	CarriageReturn LineFeed?
+Newline
+	:	CarriageReturn LineFeed?
 	|	LineFeed
-		)
-		LineFeed
-	;*/
+	;
 
 Hash:
 	'#'
@@ -92,18 +87,16 @@ Include:
 	'include'
 	;
 
-/*Define:
+Define:
 	'define'
 	;
 
 Pragma:
 	'pragma'
 	;
-*/
 
-//LineFeed: '\n';
-//CarriageReturn: '\r';
-Newline: '\n';
+LineFeed: '\n';
+CarriageReturn: '\r';
 Backslash: '\\';
 SingleQuote: '\'';
 DoubleQuote: '"';
@@ -116,5 +109,5 @@ AbsoluteFileName: Less ( . )*? Greater;
 //Letter: [a-zA-Z];
 //Digit: [0-9];
 
-// this token is needed, as otherwise "code" will not work!
+// this token is needed, as otherwise "code" will not work properly!
 Any: .;
