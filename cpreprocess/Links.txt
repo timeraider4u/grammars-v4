@@ -1,0 +1,5 @@
+https://de.wikipedia.org/wiki/C-Pr%C3%A4prozessor
+https://gcc.gnu.org/onlinedocs/cpp/Tokenization.html#Tokenization
+https://en.wikipedia.org/wiki/C_preprocessor
+https://en.wikipedia.org/wiki/Pragma_once
+http://www.eclipse.org/xtend/documentation/203_xtend_expressions.html#templates
